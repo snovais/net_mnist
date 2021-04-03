@@ -10,6 +10,10 @@ from tensorflow.keras import layers
 
 import numpy as np
 
+import cv2
+
+import matplotlib.pyplot as plt
+
 import time
 
 
@@ -25,7 +29,22 @@ loss_fn = keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 batch_size = 128
 (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
 
+def canny(x, y):
+    edges = []
+    for i in range(len(x)):
+        edges.append(cv2.Canny(x[i], 28, 28))
+   
+    del x
+        
+    return np.array(edges), y
+        
+x_train, y_train = canny(x_train, y_train)
+x_test, y_test = canny(x_test, y_test)
 
+print(y_train[0])
+
+
+"""
 # imagens vem com formato (x, 28, 28, 1), o código abaixo 
 # transforma para matrizes 2D
 x_train = np.reshape(x_train, (-1, 784))
@@ -42,10 +61,8 @@ y_train = y_train[:-10000]
 # Prepara o banco de imagens para formato tensorflow
 train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train))
 
-
 # separa um buffer para sempre ter dados disponíveis para a rede
 train_dataset = train_dataset.shuffle(buffer_size=1024).batch(batch_size)
-
 
 # preparar os dados para validação
 val_dataset = tf.data.Dataset.from_tensor_slices((x_val, y_val))
@@ -77,7 +94,6 @@ def build_model( units, drop_out ):
 
 model = build_model(1024, 0.3)
 
-
 # preparando as métricas
 train_acc_metric = keras.metrics.SparseCategoricalAccuracy()
 val_acc_metric = keras.metrics.SparseCategoricalAccuracy()
@@ -86,7 +102,7 @@ val_acc_metric = keras.metrics.SparseCategoricalAccuracy()
 @tf.function
 def train_step( x, y ):
     # x -> 64, 784
-    # y -> 64, 
+    # y -> 64
 
     with tf.GradientTape() as tape:
         logits = model(x, training=True)
@@ -137,13 +153,6 @@ def learning( epochs ):
         print("Acurácia na Validação: %.4f" % (float(val_acc),))
         print("tempo decorrido: %.2fs" % (time.time() - start_time))
 
-        if train_acc > 99.1 and val_acc > 99.1:
-            print("Acurácia do treinamento após época: %.4f" % (float(train_acc),))
-            print("Acurácia na Validação: %.4f" % (float(val_acc),))
-            print("Época ", epoch)
-            print("FIM!")
-            model.save(r'C:\Users\sergi\Downloads\9 º semestre\Computação Gráfica\Project-1\model')
-            break
-
 
 learning( epochs = 1500 )
+"""
