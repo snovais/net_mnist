@@ -52,11 +52,12 @@ def binarize( data, threshold ):
     return np.array(binary_data)
 
 
-def canny(x, y):
+def canny_filter(x, y):
     edges = []
+    print("\nInício da aplicação do filtro\n")
     for i in range(len(x)):
         edges.append(cv2.Canny(x[i], 28, 28))
    
     del x
-        
+    print("\nFim da aplicação do filtro\n")
     return np.array(edges), y

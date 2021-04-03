@@ -10,9 +10,7 @@ from tensorflow.keras import layers
 
 import numpy as np
 
-import cv2
-
-import matplotlib.pyplot as plt
+import processing as pr
 
 import time
 
@@ -20,31 +18,16 @@ import time
 # instanciando o otimizador
 optimizer = keras.optimizers.Adamax(learning_rate = 1e-3)
 
-
 # instanciando a função de perda
 loss_fn = keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-
 
 # preparando o banco de imagens mnist
 batch_size = 128
 (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
-
-def canny(x, y):
-    edges = []
-    for i in range(len(x)):
-        edges.append(cv2.Canny(x[i], 28, 28))
-   
-    del x
         
-    return np.array(edges), y
-        
-x_train, y_train = canny(x_train, y_train)
-x_test, y_test = canny(x_test, y_test)
+x_train, y_train = pr.canny_filter(x_train, y_train)
+x_test, y_test = pr.canny_filter(x_test, y_test)
 
-print(y_train[0])
-
-
-"""
 # imagens vem com formato (x, 28, 28, 1), o código abaixo 
 # transforma para matrizes 2D
 x_train = np.reshape(x_train, (-1, 784))
@@ -155,4 +138,3 @@ def learning( epochs ):
 
 
 learning( epochs = 1500 )
-"""
