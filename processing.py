@@ -2,7 +2,7 @@
 """
 Created on Sat Apr  3 18:24:47 2021
 
-@author: sergi
+@author: Sérgio Novais, Christian Alves e Denise Ribeiro
 """
 import numpy as np
 import cv2
