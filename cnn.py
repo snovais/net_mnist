@@ -28,30 +28,27 @@ x_train = x_train[..., tf.newaxis].astype("float32")
 x_test = x_test[..., tf.newaxis].astype("float32")
 
 train_ds = tf.data.Dataset.from_tensor_slices(
-                                  (x_train, y_train)).shuffle(10000).batch(32)
+                                  (x_train, y_train)).shuffle(10000).batch(64)
 
-test_ds = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(32)
-
+test_ds = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(64)
 
 
 class MyModel(Model):
-  def __init__(self):
+  def __init__(self, units, drop_out):
     super(MyModel, self).__init__()
-    self.conv1 = Conv2D(32, 5, activation='relu')
-    self.pool1 = MaxPool2D(pool_size = (16, 16))
-    self.conv2 = Conv2D(32, 5, activation='relu')
-    self.pool1 = MaxPool2D(pool_size = (16, 16))
+    self.conv1 = Conv2D(32, 8, activation='relu')
+    self.conv2 = Conv2D(32, 8, activation='relu')
     self.flatten = Flatten()
-    self.d1 = Dense(12800, activation='relu')
-    self.dr1 = Dropout(0.3)
-    self.d2 = Dense(1024, activation='relu')
-    self.dr2 = Dropout(0.3)
-    self.d3 = Dense(1024, activation='relu')
-    self.dr3 = Dropout(0.3)
-    self.d4 = Dense(1024, activation='relu')
-    self.dr4 = Dropout(0.3)
-    self.d5 = Dense(1024, activation='relu')
-    self.dr5 = Dropout(0.3)
+    self.d1 = Dense(6272, activation='relu')
+    self.dr1 = Dropout(drop_out)
+    self.d2 = Dense(units, activation='relu')
+    self.dr2 = Dropout(drop_out)
+    self.d3 = Dense(units, activation='relu')
+    self.dr3 = Dropout(drop_out)
+    self.d4 = Dense(units, activation='relu')
+    self.dr4 = Dropout(drop_out)
+    self.d5 = Dense(units, activation='relu')
+    self.dr5 = Dropout(drop_out)
     self.d6 = Dense(10)
 
 
@@ -68,16 +65,17 @@ class MyModel(Model):
     x = self.d4(x)
     x = self.dr4(x)
     x = self.d5(x)
+    x = self.dr5(x)
 
     return self.d6(x)
 
 
 # Create an instance of the model
-model = MyModel()
+model = MyModel(1024, 0.4)
 
 loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 
-optimizer = tf.keras.optimizers.Adamax()
+optimizer = tf.keras.optimizers.Adamax(learning_rate=0.0001)
 
 train_loss = tf.keras.metrics.Mean(name='train_loss')
 train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
@@ -111,7 +109,7 @@ def test_step(images, labels):
   test_accuracy(labels, predictions)
   
   
-EPOCHS = 40
+EPOCHS = 50
 
 for epoch in range(EPOCHS):
   # Reset the metrics at the start of the next epoch
