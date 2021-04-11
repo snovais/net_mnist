@@ -8,7 +8,6 @@ https://www.tensorflow.org/tutorials/quickstart/advanced
 """
 
 import tensorflow as tf
-
 from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPool2D, Dropout
 from tensorflow.keras import Model
 
@@ -109,7 +108,7 @@ def test_step(images, labels):
   test_accuracy(labels, predictions)
   
   
-EPOCHS = 50
+EPOCHS = 120
 
 for epoch in range(EPOCHS):
   # Reset the metrics at the start of the next epoch
