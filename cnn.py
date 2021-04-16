@@ -2,13 +2,12 @@
 """
 Created on Sat Apr  3 18:43:37 2021
 
-@author: sergi
+@author: sergio novais, chris alves, denise ribeiro
 
-https://www.tensorflow.org/tutorials/quickstart/advanced
 """
 
 import tensorflow as tf
-from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPool2D, Dropout
+from tensorflow.keras.layers import Dense, Flatten, Conv2D, Dropout
 from tensorflow.keras import Model
 
 import processing as pr
