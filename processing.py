@@ -7,6 +7,8 @@ Created on Sat Apr  3 18:24:47 2021
 import numpy as np
 import cv2
 
+
+"""
 def find_threshold( data ):
     threshold = 0
     list_of_thresholds = []
@@ -49,7 +51,7 @@ def binarize( data, threshold ):
                     
         binary_data.append(image)
         
-    return np.array(binary_data)
+    return np.array(binary_data) """
 
 
 def canny_filter(x, y):
